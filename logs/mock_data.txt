@@ -1,0 +1,16 @@
+Simulated Production Log Data for Infrastructure Monitoring
+
+Format: TIMESTAMP | SERVICE_NAME | EVENT_TYPE | LATENCY_MS
+
+2025-11-21 10:01:00 | OrderRouter | SUCCESS | 1.2ms
+2025-11-21 10:01:00 | DataIngest | INFO | 200.5ms
+2025-11-21 10:01:01 | RiskEngine | SUCCESS | 0.8ms
+2025-11-21 10:01:01 | OrderRouter | SUCCESS | 1.1ms
+2025-11-21 10:01:02 | DataIngest | ERROR | 250.0ms
+2025-11-21 10:01:02 | RiskEngine | SUCCESS | 0.9ms
+2025-11-21 10:01:03 | OrderRouter | SUCCESS | 1.5ms
+2025-11-21 10:01:03 | DataIngest | INFO | 190.2ms
+2025-11-21 10:01:04 | RiskEngine | ERROR | 1.5ms
+2025-11-21 10:01:05 | OrderRouter | SUCCESS | 1.0ms
+2025-11-21 10:01:06 | DataIngest | SUCCESS | 180.0ms
+2025-11-21 10:01:07 | RiskEngine | SUCCESS | 0.7ms
