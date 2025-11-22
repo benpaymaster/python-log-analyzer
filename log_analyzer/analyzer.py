@@ -1,7 +1,7 @@
 from collections import defaultdict
 from typing import Dict, Any
 
-def analyze_logs(log_data: str) -> Dict[str, Any]:
+def analyze_logs(log_data: str, event_type_filter: str = None) -> Dict[str, Any]:
     """
     Parses a string of simulated infrastructure log data and calculates
     summary statistics: event counts and average latency per service.
@@ -10,6 +10,7 @@ def analyze_logs(log_data: str) -> Dict[str, Any]:
 
     Args:
         log_data: A string containing newline-separated log entries.
+        event_type_filter: If provided, only include events matching this type.
 
     Returns:
         A dictionary containing the calculated summary statistics, including
@@ -32,7 +33,11 @@ def analyze_logs(log_data: str) -> Dict[str, Any]:
 
             # Extract data points
             _, service_name, event_type, latency_str = parts
-            
+
+            # Filter by event type if specified
+            if event_type_filter and event_type.upper() != event_type_filter.upper():
+                continue
+
             # Remove 'ms' suffix and convert to float
             latency = float(latency_str.lower().replace('ms', ''))
 

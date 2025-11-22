@@ -31,17 +31,43 @@ infra-log-analyzer/
 │   └── mock_data.txt     # Simulated input data for demonstration
 └── run.py                # Main script to execute the tool and run tests
 
+
 ## ▶️ How to Run
 
-1.  **Clone the Repository:**
+1. **Clone the Repository:**
+  ```bash
+  git clone [your-github-repo-link]
+  cd infra-log-analyzer
+  ```
 
-    ```bash
-    git clone [your-github-repo-link]
-    cd infra-log-analyzer
-    
-2.  **Execute the Script:**
+2. **Run the Analyzer (default log file):**
+  ```bash
+  python3 run.py
+  ```
 
-    ```bash
-    python run.py
-    
-The script will load the data, print the analysis summary, and then execute the unit tests for validation.
+3. **Specify a Custom Log File:**
+  ```bash
+  python3 run.py --file path/to/your/logfile.txt
+  ```
+
+4. **Stream Logs from Another Process:**
+  ```bash
+  tail -f logs/mock_data.txt | python3 run.py --stream
+  ```
+
+5. **Save the Summary Report to a JSON File:**
+  ```bash
+  python3 run.py --output summary.json
+  ```
+
+---
+
+## 🚦 Features
+
+- **Log Parsing:** Reads logs from a file or real-time stream (stdin).
+- **Configurable Input:** Use `--file` to specify any log file.
+- **Real-Time Streaming:** Use `--stream` to process logs piped from another process.
+- **Alerting:** Prints alerts if error rate or latency exceeds thresholds.
+- **Overall Summary:** Prints total events, overall average latency, and error rate.
+- **Export:** Use `--output` to save the summary as a JSON file.
+- **Unit Tests:** Ensures reliability with `python3 -m unittest log_analyzer/tests.py`.
