@@ -60,6 +60,13 @@ infra-log-analyzer/
   python3 run.py --output summary.json
   ```
 
+6. **Filter Analysis by Event Type (e.g., ERROR, SUCCESS, INFO):**
+  ```bash
+  python3 run.py --event-type ERROR
+  python3 run.py --event-type SUCCESS
+  ```
+  ```
+
 ---
 
 ## 🚦 Features
@@ -70,4 +77,5 @@ infra-log-analyzer/
 - **Alerting:** Prints alerts if error rate or latency exceeds thresholds.
 - **Overall Summary:** Prints total events, overall average latency, and error rate.
 - **Export:** Use `--output` to save the summary as a JSON file.
+- **Log Level Filtering:** Use `--event-type` to filter analysis by event type (e.g., ERROR, SUCCESS, INFO).
 - **Unit Tests:** Ensures reliability with `python3 -m unittest log_analyzer/tests.py`.

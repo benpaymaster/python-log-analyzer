@@ -1,7 +1,7 @@
 from collections import defaultdict
 from typing import Dict, Any
 
-def analyze_logs(log_data: str, event_type_filter: str = None) -> Dict[str, Any]:
+def analyze_logs(log_data: str, event_type_filter: str = None, delimiter: str = '|') -> Dict[str, Any]:
     """
     Parses a string of simulated infrastructure log data and calculates
     summary statistics: event counts and average latency per service.
@@ -26,7 +26,7 @@ def analyze_logs(log_data: str, event_type_filter: str = None) -> Dict[str, Any]
 
         try:
             # Format: TIMESTAMP | SERVICE_NAME | EVENT_TYPE | LATENCY_MS
-            parts = [p.strip() for p in line.split('|')]
+            parts = [p.strip() for p in line.split(delimiter)]
             if len(parts) != 4:
                 # Skip malformed lines for robustness
                 continue

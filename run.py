@@ -11,7 +11,7 @@ from log_analyzer.tests import TestLogAnalyzer # Imports tests for display
 # Define the file path for the mock log data
 LOG_FILE_PATH = 'logs/mock_data.txt'
 
-def run_analysis(log_data_source, is_stream=False, output_path=None, event_type_filter=None):
+def run_analysis(log_data_source, is_stream=False, output_path=None, event_type_filter=None, delimiter='|'):
     """
     Main function to load logs, run the analysis, and print the results.
     log_data_source: file path or stdin
@@ -27,7 +27,7 @@ def run_analysis(log_data_source, is_stream=False, output_path=None, event_type_
                 log_data = f.read()
 
         # Run the analysis using the core function
-        analysis_results = analyze_logs(log_data, event_type_filter=event_type_filter)
+        analysis_results = analyze_logs(log_data, event_type_filter=event_type_filter, delimiter=delimiter)
 
         print("\n--- 2. Infrastructure Summary Report ---")
         if event_type_filter:
@@ -87,11 +87,13 @@ if __name__ == '__main__':
     parser.add_argument('--file', type=str, default=LOG_FILE_PATH, help='Path to the log file (default: logs/mock_data.txt)')
     parser.add_argument('--output', type=str, help='Path to save the summary report as a JSON file')
     parser.add_argument('--event-type', type=str, help='Filter analysis by event type (e.g., ERROR, SUCCESS, INFO)')
+    parser.add_argument('--delimiter', type=str, default='|', help='Log entry delimiter (default: |)')
     args = parser.parse_args()
 
     event_type_filter = args.event_type
+    delimiter = args.delimiter
 
     if args.stream:
-        run_analysis(None, is_stream=True, output_path=args.output, event_type_filter=event_type_filter)
+        run_analysis(None, is_stream=True, output_path=args.output, event_type_filter=event_type_filter, delimiter=delimiter)
     else:
-        run_analysis(args.file, output_path=args.output, event_type_filter=event_type_filter)
+        run_analysis(args.file, output_path=args.output, event_type_filter=event_type_filter, delimiter=delimiter)
