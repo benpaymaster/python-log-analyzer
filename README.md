@@ -50,20 +50,57 @@ infra-log-analyzer/
   python3 run.py --file path/to/your/logfile.txt
   ```
 
-4. **Stream Logs from Another Process:**
+4. **Custom Log Format/Delimiter (auto-detect by default):**
+  ```bash
+  python3 run.py --delimiter ','
+  python3 run.py --delimiter $'\t'  # For tab-delimited logs
+  python3 run.py                    # Auto-detects delimiter from log file
+  ```
+
+5. **Stream Logs from Another Process:**
   ```bash
   tail -f logs/mock_data.txt | python3 run.py --stream
   ```
 
-5. **Save the Summary Report to a JSON File:**
+6. **Save the Summary Report to a JSON File:**
   ```bash
   python3 run.py --output summary.json
   ```
 
-6. **Filter Analysis by Event Type (e.g., ERROR, SUCCESS, INFO):**
+7. **Export the Summary Report to CSV:**
+  ```bash
+  python3 run.py --csv-output summary.csv
+  ```
+
+8. **Filter Analysis by Event Type (e.g., ERROR, SUCCESS, INFO):**
   ```bash
   python3 run.py --event-type ERROR
   python3 run.py --event-type SUCCESS
+  ```
+
+9. **Filter by Service Name(s):**
+  ```bash
+  python3 run.py --service DataIngest,RiskEngine
+  ```
+
+10. **Filter by Time Window:**
+  ```bash
+  python3 run.py --start-time '2025-01-01T00:00:00' --end-time '2025-12-31T23:59:59'
+  ```
+
+11. **Show Top-N Slowest Events per Service:**
+  ```bash
+  python3 run.py --top-slowest 3
+  ```
+
+12. **Show Latency Histogram per Service:**
+  ```bash
+  python3 run.py --latency-histogram '0,50,100,200,500'
+  ```
+
+13. **Set Custom Alert Thresholds:**
+  ```bash
+  python3 run.py --error-threshold 10 --latency-threshold 50
   ```
   ```
 
@@ -78,4 +115,11 @@ infra-log-analyzer/
 - **Overall Summary:** Prints total events, overall average latency, and error rate.
 - **Export:** Use `--output` to save the summary as a JSON file.
 - **Log Level Filtering:** Use `--event-type` to filter analysis by event type (e.g., ERROR, SUCCESS, INFO).
+- **Service Name Filtering:** Use `--service` to analyze only specific services.
+- **Time Window Filtering:** Use `--start-time` and `--end-time` to restrict analysis to a time range.
+- **Top-N Slowest Events:** Use `--top-slowest` to report slowest events per service.
+- **Latency Histogram:** Use `--latency-histogram` to print bucketed latency summary per service.
+- **Export to CSV:** Use `--csv-output` to save summary as CSV.
+- **Configurable Alert Thresholds:** Use `--error-threshold` and `--latency-threshold` to set custom alert levels.
+- **Log Format Auto-Detection:** If `--delimiter` is not specified, the tool auto-detects the log format.
 - **Unit Tests:** Ensures reliability with `python3 -m unittest log_analyzer/tests.py`.

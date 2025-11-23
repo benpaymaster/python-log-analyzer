@@ -1,0 +1,4 @@
+service,total_events,average_latency_ms,error_rate
+OrderRouter,4,1.2,0.00%
+DataIngest,4,205.18,25.00%
+RiskEngine,4,0.98,25.00%
