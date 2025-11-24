@@ -97,3 +97,21 @@ class TestLogAnalyzer(unittest.TestCase):
         self.assertEqual(result2['TradingEngine']['total_events'], 1)
         self.assertEqual(result2['DataFeed']['error_rate'], '100.00%')
         self.assertEqual(result2['DataFeed']['average_latency_ms'], 5.00)
+
+    def test_parallel_processing(self):
+        """Test that parallel processing produces the same results as serial processing."""
+        logs = """
+2025-11-21 10:00:01 | TradingEngine | INFO | 12.5ms
+2025-11-21 10:00:02 | DataFeed | ERROR | 5.0ms
+2025-11-21 10:00:03 | TradingEngine | SUCCESS | 17.5ms
+2025-11-21 10:00:04 | DataFeed | SUCCESS | 50.0ms
+"""
+        result_serial = analyze_logs(logs)
+        result_parallel = analyze_logs(logs, parallel=True)
+        self.assertEqual(result_serial, result_parallel)
+
+        # Also test with regex parsing in parallel
+        regex = r"^(?P<timestamp>\S+) \| (?P<service>\S+) \| (?P<event_type>\S+) \| (?P<latency>\d+\.\d+)ms$"
+        result_regex_serial = analyze_logs(logs, log_regex=regex)
+        result_regex_parallel = analyze_logs(logs, log_regex=regex, parallel=True)
+        self.assertEqual(result_regex_serial, result_regex_parallel)

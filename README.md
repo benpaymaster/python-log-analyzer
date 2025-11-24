@@ -129,6 +129,12 @@ infra-log-analyzer/
   # Example for logs like: 2025-11-21 10:00:01 | TradingEngine | INFO | 12.5ms
   ```
 
+18. **Enable Parallel Processing for Large Log Files:**
+  ```bash
+  python3 run.py --parallel --file path/to/large_log.txt
+  # Uses multiprocessing to speed up log parsing and analysis
+  ```
+
 ---
 
 ## 🚦 Features
@@ -152,3 +158,4 @@ infra-log-analyzer/
 - **Anomaly Detection:** Use `--detect-anomalies` to flag and display latency/error rate spikes in the CLI output.
 - **Unit Tests:** Ensures reliability with `python3 -m unittest log_analyzer/tests.py` and runs automatically after each analysis.
 - **Regex-Based Parsing:** Use `--log-regex` to supply a custom regex for log entry parsing. Supports named groups: `timestamp`, `service`, `event_type`, `latency`. Falls back to delimiter-based parsing if not provided.
+- **Parallel Processing:** Use `--parallel` to enable multiprocessing for large log files. This speeds up log parsing and analysis, especially for big datasets.

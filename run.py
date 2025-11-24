@@ -11,7 +11,7 @@ LOG_FILE_PATH = 'logs/mock_data.txt'
 ERROR_RATE_THRESHOLD = 20.0  # percent
 LATENCY_THRESHOLD = 100.0    # ms
 
-def run_analysis(log_data_source, is_stream=False, output_path=None, event_type_filter=None, delimiter='|', start_time=None, end_time=None, service_names=None, top_slowest=None, latency_histogram=None, csv_output=None, error_threshold=None, latency_threshold=None, detect_anomalies=False, log_dir=None, log_regex=None):
+def run_analysis(log_data_source, is_stream=False, output_path=None, event_type_filter=None, delimiter='|', start_time=None, end_time=None, service_names=None, top_slowest=None, latency_histogram=None, csv_output=None, error_threshold=None, latency_threshold=None, detect_anomalies=False, log_dir=None, log_regex=None, parallel=False):
     try:
         if is_stream:
             print("--- 1. Loading log data from stdin (stream mode) ---")
@@ -54,7 +54,8 @@ def run_analysis(log_data_source, is_stream=False, output_path=None, event_type_
             service_names=service_names,
             top_slowest=top_slowest,
             latency_histogram=latency_histogram,
-            detect_anomalies=detect_anomalies
+            detect_anomalies=detect_anomalies,
+            parallel=parallel
         )
 
         if csv_output:
@@ -149,6 +150,7 @@ if __name__ == '__main__':
     parser.add_argument('--detect-anomalies', action='store_true', help='Flag latency/error rate anomalies using statistical methods')
     parser.add_argument('--log-dir', type=str, help='Directory containing log files to analyze (all *.txt files will be processed)')
     parser.add_argument('--log-regex', type=str, help='Regex pattern for log entry parsing (named groups: timestamp, service, event_type, latency)')
+    parser.add_argument('--parallel', action='store_true', help='Enable parallel processing for large log files')
     args = parser.parse_args()
 
     # Load config file if specified
@@ -184,10 +186,11 @@ if __name__ == '__main__':
     output_path = get_opt('output')
     log_dir = get_opt('log_dir')
     log_regex = get_opt('log_regex')
+    parallel = get_opt('parallel', False)
 
     if is_stream:
-        run_analysis(None, is_stream=True, output_path=output_path, event_type_filter=event_type_filter, delimiter=delimiter, log_regex=log_regex, start_time=start_time, end_time=end_time, service_names=service_names, top_slowest=top_slowest, latency_histogram=latency_histogram, csv_output=csv_output, error_threshold=error_threshold, latency_threshold=latency_threshold, detect_anomalies=detect_anomalies)
+        run_analysis(None, is_stream=True, output_path=output_path, event_type_filter=event_type_filter, delimiter=delimiter, log_regex=log_regex, start_time=start_time, end_time=end_time, service_names=service_names, top_slowest=top_slowest, latency_histogram=latency_histogram, csv_output=csv_output, error_threshold=error_threshold, latency_threshold=latency_threshold, detect_anomalies=detect_anomalies, parallel=parallel)
     elif log_dir:
-        run_analysis(None, is_stream=False, output_path=output_path, event_type_filter=event_type_filter, delimiter=delimiter, log_regex=log_regex, start_time=start_time, end_time=end_time, service_names=service_names, top_slowest=top_slowest, latency_histogram=latency_histogram, csv_output=csv_output, error_threshold=error_threshold, latency_threshold=latency_threshold, detect_anomalies=detect_anomalies, log_dir=log_dir)
+        run_analysis(None, is_stream=False, output_path=output_path, event_type_filter=event_type_filter, delimiter=delimiter, log_regex=log_regex, start_time=start_time, end_time=end_time, service_names=service_names, top_slowest=top_slowest, latency_histogram=latency_histogram, csv_output=csv_output, error_threshold=error_threshold, latency_threshold=latency_threshold, detect_anomalies=detect_anomalies, log_dir=log_dir, parallel=parallel)
     else:
-        run_analysis(file_path, output_path=output_path, event_type_filter=event_type_filter, delimiter=delimiter, log_regex=log_regex, start_time=start_time, end_time=end_time, service_names=service_names, top_slowest=top_slowest, latency_histogram=latency_histogram, csv_output=csv_output, error_threshold=error_threshold, latency_threshold=latency_threshold, detect_anomalies=detect_anomalies)
+        run_analysis(file_path, output_path=output_path, event_type_filter=event_type_filter, delimiter=delimiter, log_regex=log_regex, start_time=start_time, end_time=end_time, service_names=service_names, top_slowest=top_slowest, latency_histogram=latency_histogram, csv_output=csv_output, error_threshold=error_threshold, latency_threshold=latency_threshold, detect_anomalies=detect_anomalies, parallel=parallel)
