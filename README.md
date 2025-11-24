@@ -102,6 +102,12 @@ infra-log-analyzer/
   ```bash
   python3 run.py --error-threshold 10 --latency-threshold 50
   ```
+
+14. **Detect and Display Latency Anomalies:**
+  ```bash
+  python3 run.py --detect-anomalies
+  # Anomalies will be shown in the CLI output for each service
+  ```
   ```
 
 ---
@@ -122,4 +128,5 @@ infra-log-analyzer/
 - **Export to CSV:** Use `--csv-output` to save summary as CSV.
 - **Configurable Alert Thresholds:** Use `--error-threshold` and `--latency-threshold` to set custom alert levels.
 - **Log Format Auto-Detection:** If `--delimiter` is not specified, the tool auto-detects the log format.
+- **Anomaly Detection:** Use `--detect-anomalies` to flag and display latency spikes in the CLI output.
 - **Unit Tests:** Ensures reliability with `python3 -m unittest log_analyzer/tests.py`.
