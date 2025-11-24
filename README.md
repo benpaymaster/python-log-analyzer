@@ -121,6 +121,12 @@ infra-log-analyzer/
   # Flags spikes in latency and error rate per service
   # Anomalies will be shown in the CLI output for each service
   ```
+
+17. **Regex-Based Log Parsing:**
+  ```bash
+  python3 run.py --log-regex "^(?P<timestamp>\S+) \| (?P<service>\S+) \| (?P<event_type>\S+) \| (?P<latency>\d+\.\d+)ms$"
+  # Use a custom regex with named groups: timestamp, service, event_type, latency
+  # Example for logs like: 2025-11-21 10:00:01 | TradingEngine | INFO | 12.5ms
   ```
 
 ---
@@ -145,3 +151,4 @@ infra-log-analyzer/
 - **Log Format Auto-Detection:** If `--delimiter` is not specified, the tool auto-detects the log format.
 - **Anomaly Detection:** Use `--detect-anomalies` to flag and display latency/error rate spikes in the CLI output.
 - **Unit Tests:** Ensures reliability with `python3 -m unittest log_analyzer/tests.py` and runs automatically after each analysis.
+- **Regex-Based Parsing:** Use `--log-regex` to supply a custom regex for log entry parsing. Supports named groups: `timestamp`, `service`, `event_type`, `latency`. Falls back to delimiter-based parsing if not provided.

@@ -1,16 +1,19 @@
 from collections import defaultdict
 from typing import Dict, Any
+import re
 
-def analyze_logs(log_data: str, event_type_filter: str = None, delimiter: str = '|', start_time: str = None, end_time: str = None, service_names: list = None, top_slowest: int = None, latency_histogram: list = None, detect_anomalies: bool = False) -> Dict[str, Any]:
+def analyze_logs(log_data: str, event_type_filter: str = None, delimiter: str = '|', log_regex: str = None, start_time: str = None, end_time: str = None, service_names: list = None, top_slowest: int = None, latency_histogram: list = None, detect_anomalies: bool = False) -> Dict[str, Any]:
     """
     Parses a string of simulated infrastructure log data and calculates
     summary statistics: event counts and average latency per service.
 
     The expected log format is: TIMESTAMP | SERVICE_NAME | EVENT_TYPE | LATENCY_MS
+    Or a user-supplied regex with named groups: timestamp, service, event_type, latency
 
     Args:
         log_data: A string containing newline-separated log entries.
         event_type_filter: If provided, only include events matching this type.
+        log_regex: Optional regex pattern for parsing log entries.
 
     Returns:
         A dictionary containing the calculated summary statistics, including
@@ -33,19 +36,27 @@ def analyze_logs(log_data: str, event_type_filter: str = None, delimiter: str = 
     start_dt = parse_time(start_time) if start_time else None
     end_dt = parse_time(end_time) if end_time else None
 
+    regex = re.compile(log_regex) if log_regex else None
+
     for line in lines:
         # Ignore empty lines after strip() and lines that look like comments/headers
         if not line or line.startswith('#'):
             continue
-
         try:
-            # Format: TIMESTAMP | SERVICE_NAME | EVENT_TYPE | LATENCY_MS
-            parts = [p.strip() for p in line.split(delimiter)]
-            if len(parts) != 4:
-                # Skip malformed lines for robustness
-                continue
-
-            timestamp_str, service_name, event_type, latency_str = parts
+            if regex:
+                match = regex.match(line)
+                if not match:
+                    continue
+                gd = match.groupdict()
+                timestamp_str = gd.get('timestamp')
+                service_name = gd.get('service')
+                event_type = gd.get('event_type')
+                latency_str = gd.get('latency')
+            else:
+                parts = [p.strip() for p in line.split(delimiter)]
+                if len(parts) != 4:
+                    continue
+                timestamp_str, service_name, event_type, latency_str = parts
 
             # Time window filtering
             if start_dt or end_dt:
@@ -77,8 +88,10 @@ def analyze_logs(log_data: str, event_type_filter: str = None, delimiter: str = 
                 service_stats[service_name]['error_count'] += 1
 
         except ValueError as e:
-            # Handle cases where latency is not a number or other parsing failure
             print(f"Warning: Data type error encountered while parsing log line: '{line}' ({e}). Skipping.")
+            continue
+        except Exception as e:
+            print(f"Warning: Regex parsing error for line: '{line}' ({e}). Skipping.")
             continue
 
     # Final summary calculations

@@ -70,3 +70,30 @@ class TestLogAnalyzer(unittest.TestCase):
         self.assertNotIn('ServiceB', result)
         # Avg latency for ServiceA: (10.0 + 5.0) / 2 = 7.5
         self.assertEqual(result['ServiceA']['average_latency_ms'], 7.50)
+
+    def test_regex_parsing(self):
+        """Test parsing with a custom regex pattern."""
+        logs = """
+2025-11-21T10:00:01Z | TradingEngine | INFO | 12.5ms
+2025-11-21T10:00:02Z | DataFeed | ERROR | 5.0ms
+2025-11-21T10:00:03Z | TradingEngine | SUCCESS | 17.5ms
+"""
+        regex = r"^(?P<timestamp>\S+) \| (?P<service>\S+) \| (?P<event_type>\S+) \| (?P<latency>\d+\.\d+)ms$"
+        result = analyze_logs(logs, log_regex=regex)
+        self.assertEqual(result['TradingEngine']['total_events'], 2)
+        self.assertEqual(result['TradingEngine']['average_latency_ms'], 15.00)
+        self.assertEqual(result['TradingEngine']['error_rate'], '0.00%')
+        self.assertEqual(result['DataFeed']['total_events'], 1)
+        self.assertEqual(result['DataFeed']['error_rate'], '100.00%')
+        self.assertEqual(result['DataFeed']['average_latency_ms'], 5.00)
+
+        # Test with a slightly different format
+        logs2 = """
+2025-11-21T10:00:01Z,TradingEngine,INFO,12.5ms
+2025-11-21T10:00:02Z,DataFeed,ERROR,5.0ms
+"""
+        regex2 = r"^(?P<timestamp>\S+),(?P<service>\S+),(?P<event_type>\S+),(?P<latency>\d+\.\d+)ms$"
+        result2 = analyze_logs(logs2, log_regex=regex2)
+        self.assertEqual(result2['TradingEngine']['total_events'], 1)
+        self.assertEqual(result2['DataFeed']['error_rate'], '100.00%')
+        self.assertEqual(result2['DataFeed']['average_latency_ms'], 5.00)
