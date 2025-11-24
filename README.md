@@ -57,55 +57,68 @@ infra-log-analyzer/
   python3 run.py                    # Auto-detects delimiter from log file
   ```
 
-5. **Stream Logs from Another Process:**
+5. **Analyze Multiple Log Files (Log Rotation/Directory):**
+  ```bash
+  python3 run.py --log-dir logs/
+  # Analyzes all .txt files in the specified directory
+  ```
+
+6. **Use a Config File for All Options:**
+  ```bash
+  python3 run.py --config config.yaml
+  # Supports both YAML and JSON formats for all CLI options
+  ```
+
+7. **Stream Logs from Another Process:**
   ```bash
   tail -f logs/mock_data.txt | python3 run.py --stream
   ```
 
-6. **Save the Summary Report to a JSON File:**
+8. **Save the Summary Report to a JSON File:**
   ```bash
   python3 run.py --output summary.json
   ```
 
-7. **Export the Summary Report to CSV:**
+9. **Export the Summary Report to CSV:**
   ```bash
   python3 run.py --csv-output summary.csv
   ```
 
-8. **Filter Analysis by Event Type (e.g., ERROR, SUCCESS, INFO):**
+10. **Filter Analysis by Event Type (e.g., ERROR, SUCCESS, INFO):**
   ```bash
   python3 run.py --event-type ERROR
   python3 run.py --event-type SUCCESS
   ```
 
-9. **Filter by Service Name(s):**
+11. **Filter by Service Name(s):**
   ```bash
   python3 run.py --service DataIngest,RiskEngine
   ```
 
-10. **Filter by Time Window:**
+12. **Filter by Time Window:**
   ```bash
   python3 run.py --start-time '2025-01-01T00:00:00' --end-time '2025-12-31T23:59:59'
   ```
 
-11. **Show Top-N Slowest Events per Service:**
+13. **Show Top-N Slowest Events per Service:**
   ```bash
   python3 run.py --top-slowest 3
   ```
 
-12. **Show Latency Histogram per Service:**
+14. **Show Latency Histogram per Service:**
   ```bash
   python3 run.py --latency-histogram '0,50,100,200,500'
   ```
 
-13. **Set Custom Alert Thresholds:**
+15. **Set Custom Alert Thresholds:**
   ```bash
   python3 run.py --error-threshold 10 --latency-threshold 50
   ```
 
-14. **Detect and Display Latency Anomalies:**
+16. **Detect and Display Latency/Error Rate Anomalies:**
   ```bash
   python3 run.py --detect-anomalies
+  # Flags spikes in latency and error rate per service
   # Anomalies will be shown in the CLI output for each service
   ```
   ```
@@ -114,8 +127,10 @@ infra-log-analyzer/
 
 ## 🚦 Features
 
-- **Log Parsing:** Reads logs from a file or real-time stream (stdin).
-- **Configurable Input:** Use `--file` to specify any log file.
+
+- **Log Parsing:** Reads logs from a file, directory (log rotation), or real-time stream (stdin).
+- **Configurable Input:** Use `--file` for a log file, or `--log-dir` for a directory of log files.
+- **Config File Support:** Use `--config` to specify a YAML or JSON config file for all CLI options.
 - **Real-Time Streaming:** Use `--stream` to process logs piped from another process.
 - **Alerting:** Prints alerts if error rate or latency exceeds thresholds.
 - **Overall Summary:** Prints total events, overall average latency, and error rate.
@@ -128,5 +143,5 @@ infra-log-analyzer/
 - **Export to CSV:** Use `--csv-output` to save summary as CSV.
 - **Configurable Alert Thresholds:** Use `--error-threshold` and `--latency-threshold` to set custom alert levels.
 - **Log Format Auto-Detection:** If `--delimiter` is not specified, the tool auto-detects the log format.
-- **Anomaly Detection:** Use `--detect-anomalies` to flag and display latency spikes in the CLI output.
-- **Unit Tests:** Ensures reliability with `python3 -m unittest log_analyzer/tests.py`.
+- **Anomaly Detection:** Use `--detect-anomalies` to flag and display latency/error rate spikes in the CLI output.
+- **Unit Tests:** Ensures reliability with `python3 -m unittest log_analyzer/tests.py` and runs automatically after each analysis.
